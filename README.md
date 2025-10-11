@@ -31,11 +31,14 @@ The pipeline is designed as a multi-task Databricks Job, where each task is a se
 
 ## 3. Project Structure
 
+```
 /
-|-- 1_ingest.py # Script to ingest raw data into the Bronze table
-|-- 2_enrich.py # Script to enrich data with weather info (Bronze -> Silver)
-|-- 3_transform_load.py # Script for final transformations and loading (Silver -> Gold)
-|-- README.md # This documentation file
+├── 1_ingest.py           # Script to ingest raw data into the Bronze table  
+├── 2_enrich.py           # Script to enrich data with weather info (Bronze → Silver)  
+├── 3_transform_load.py   # Script for final transformations and loading (Silver → Gold)  
+└── README.md             # This documentation file  
+```
+
 
 
 > **Note:** The `main.py` script used for initial development has been replaced by the Databricks Job orchestrator and is no longer needed for the production pipeline.
