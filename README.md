@@ -14,7 +14,7 @@ This modular design makes the pipeline easy to maintain, debug, and scale.
 
 The flow of data can be visualized as follows:
 
-![ETL Workflow Diagram](https://via.placeholder.com/800x250.png?text=ETL+Workflow+Diagram)
+![ETL Workflow Diagram](/Images/ETL Workflow Diagram.png)
 
 - **Extract:** Raw daily sales data is ingested from multiple CSV files.  
 - **Transform & Enrich:** The combined data is enriched by calling an external weather API. It is cleaned, transformed, and new metrics are calculated.  
