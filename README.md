@@ -14,7 +14,7 @@ This modular design makes the pipeline easy to maintain, debug, and scale.
 
 The flow of data can be visualized as follows:
 
-![ETL Workflow Diagram](/Images/ETL Workflow Diagram.png)
+![ETL Workflow Diagram](/Images/ETL-Workflow-Diagram.png)
 
 - **Extract:** Raw daily sales data is ingested from multiple CSV files.  
 - **Transform & Enrich:** The combined data is enriched by calling an external weather API. It is cleaned, transformed, and new metrics are calculated.  
@@ -70,7 +70,7 @@ Follow these steps to deploy and run this ETL pipeline in your Databricks worksp
 
 Upload all four Python files (`main.py`, `ingest.py`, `enrich.py`, `transform_and_load.py`) to your Databricks Workspace.
 
-![Upload Python Files to Workspace](https://via.placeholder.com/800x300.png?text=Upload+Python+Files+to+Workspace)
+![Upload Python Files to Workspace](/Images/Upload-Python-Files-to-Workspace.png)
 
 ---
 
@@ -89,7 +89,7 @@ Upload all four Python files (`main.py`, `ingest.py`, `enrich.py`, `transform_an
   - `requests`
   - `databricks-sql-connector`
 
-![Databricks Job Task Configuration](https://via.placeholder.com/1200x500.png?text=Databricks+Job+Task+Configuration)
+![Databricks Job Task Configuration](/Images/Databricks-Job-Task-Configuration.png)
 
 ---
 
@@ -98,7 +98,7 @@ Upload all four Python files (`main.py`, `ingest.py`, `enrich.py`, `transform_an
 Click the **Run now** button to execute the pipeline.  
 You can monitor the run's progress in the **Job runs** tab.
 
-![Successful Job Run Monitoring](https://via.placeholder.com/1200x400.png?text=Successful+Job+Run+Monitoring)
+![Successful Job Run Monitoring](/Images/Successful-Job-Run-Monitoring.png)
 
 ---
 
