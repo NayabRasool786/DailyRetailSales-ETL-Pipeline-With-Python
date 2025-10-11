@@ -148,11 +148,12 @@ This pipeline is designed to be run as a multi-task Databricks Job.
 - **Cluster:** Select the same cluster.
 - Click **Create**.
 
-![Successful-Job-Run-Monitoring](Images/Successful-Job-Run-Monitoring.png)
 
 ---
 
 Your job is now fully configured! You can run it manually by clicking **Run now** or set a schedule (e.g., hourly) for automated execution.
+
+![Successful-Job-Run-Monitoring](Images/Successful-Job-Run-Monitoring.png)
 
 ---
 
