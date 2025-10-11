@@ -73,14 +73,15 @@ To securely store your API key, you must create a Databricks secret. Run these c
 **Create a Secret Scope:**  
 (This scope name must match the one used in `2_enrich.py`)
 
+```
 databricks secrets create-scope --scope "nayabrasool786"
-
+```
 
 **Add Your API Key to the Scope:**  
 (This key name must also match the one used in the script)
-
+```
 databricks secrets put --scope "nayabrasool786" --key "openweathermap-api-key"
-
+```
 
 
 This will open a text editor. Paste your API key, save, and close the editor. Your key is now securely stored.
