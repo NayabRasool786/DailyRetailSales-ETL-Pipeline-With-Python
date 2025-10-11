@@ -1,122 +1,163 @@
-# 🛒 Daily Retail Sales ETL Pipeline
+# Databricks ETL Pipeline: Weather Data Enrichment
 
-This project contains a robust, modular, and automated **ETL (Extract, Transform, Load)** pipeline designed to process daily retail sales data.  
-The pipeline is built with **Python** and is optimized to run as a scheduled job on the **Databricks** platform.
-
-The core function of this pipeline is to ingest raw daily sales files, enrich them with external data (in this case, weather information), perform necessary cleaning and transformations, and load the final, analysis-ready data into a **Delta table**.
+**Author:** Nayab Rasool  
+**Last Updated:** October 11, 2025
 
 ---
 
-## 🏛️ Project Architecture
+## 1. Project Overview
 
-The pipeline follows a standard **multi-stage ETL process**. Data flows from raw source files to a final, clean table, with each stage being handled by a dedicated module.  
-This modular design makes the pipeline easy to maintain, debug, and scale.
+This project implements an end-to-end ETL (Extract, Transform, Load) pipeline built on the Databricks Lakehouse Platform. The primary goal is to ingest raw source data, enrich it with real-time weather information from the [OpenWeatherMap API](https://openweathermap.org/api), and load it into a series of structured Delta tables suitable for business intelligence and data analysis.
 
-The flow of data can be visualized as follows:
-
-![ETL Workflow Diagram](/Images/ETL-Workflow-Diagram.png)
-
-- **Extract:** Raw daily sales data is ingested from multiple CSV files.  
-- **Transform & Enrich:** The combined data is enriched by calling an external weather API. It is cleaned, transformed, and new metrics are calculated.  
-- **Load:** The final, processed data is loaded into a structured Delta Lake table, ready for analytics, BI reporting, or machine learning.
+The pipeline follows the Medallion Architecture (Bronze, Silver, Gold layers) to ensure data quality, traceability, and modularity. Orchestration is handled using Databricks Jobs to create a robust, visual, and dependent workflow.
 
 ---
 
-## ✨ Key Features
+## 2. Pipeline Architecture
 
-- **Modular Code:** The logic is split into distinct Python files for ingestion, enrichment, and transformation, promoting code reusability and clarity.  
-- **Automation-Ready:** Designed to be executed as an automated, scheduled Databricks Job for daily processing.  
-- **Data Enrichment:** Calls the OpenWeatherMap API to fetch historical weather data, adding valuable context to the sales information.  
-- **Secure Credential Management:** Uses Databricks Secrets to securely store and access the API key, avoiding hardcoded credentials.  
-- **Scalability:** Built on Spark (via Databricks), the pipeline can scale to handle large volumes of data.  
-- **Reliability:** Uses Delta Lake tables as the final destination, ensuring data reliability and transactional integrity.
+The pipeline is designed as a multi-task Databricks Job, where each task is a separate Python script responsible for a specific stage of the ETL process. Data is passed between tasks by writing and reading from Delta tables.
 
----
+### Job Workflow:
 
-## 📂 Code Structure
+- Task 1: Ingest_Data → Task 2: Enrich_Data → Task 3: Transform_and_Load
 
-The project is organized into modular Python scripts, each with a specific responsibility.  
-The `main.py` script acts as the orchestrator that calls the functions from the other modules in sequence.
+### Data Flow (Medallion Architecture):
 
-| File | Description |
-|------|--------------|
-| **main.py** | The entry point of the application. It orchestrates the entire ETL flow by calling functions from the other modules in the correct order. |
-| **ingest.py** | Handles the "Extract" phase. Contains the logic to find and read the 20 daily sales CSV files and combine them into a single DataFrame. |
-| **enrich.py** | Handles the "Enrichment" part of the "Transform" phase. It takes the raw data, calls the weather API, and merges the temperature data. |
-| **transform_and_load.py** | Handles the final "Transform" and "Load" phases. It cleans the data, calculates new columns (like `rev_per_unit`), and saves the result. |
+- **Bronze Layer:** Raw, unaltered data ingested from the source.
+- **Silver Layer:** Cleaned, validated, and enriched data. In this pipeline, the weather information is added at this stage.
+- **Gold Layer:** Aggregated, business-level tables ready for analytics and reporting.
 
 ---
 
-## 🚀 How to Run the Pipeline on Databricks
+## 3. Project Structure
 
-Follow these steps to deploy and run this ETL pipeline in your Databricks workspace.
+/
+|-- 1_ingest.py # Script to ingest raw data into the Bronze table
+|-- 2_enrich.py # Script to enrich data with weather info (Bronze -> Silver)
+|-- 3_transform_load.py # Script for final transformations and loading (Silver -> Gold)
+|-- README.md # This documentation file
 
----
 
-### ✅ Prerequisites
-
-- A Databricks workspace.  
-- Your daily sales CSV files uploaded to a known location in the Databricks File System (DBFS) or Workspace.  
-- An API key from **OpenWeatherMap**.  
-- Databricks Secrets Setup: You must create a secret scope and add your API key to it.
-
-#### Steps to set up secrets:
-1. Create a scope (e.g., `nayabrasool786`).  
-2. Add your key with a name (e.g., `openweathermap-api-key`).
+> **Note:** The `main.py` script used for initial development has been replaced by the Databricks Job orchestrator and is no longer needed for the production pipeline.
 
 ---
 
-### 🧩 Step 1: Upload the Python Files
+## 4. Prerequisites
 
-Upload all four Python files (`main.py`, `ingest.py`, `enrich.py`, `transform_and_load.py`) to your Databricks Workspace.
+Before you begin, ensure you have the following:
 
-![Upload Python Files to Workspace](/Images/Upload-Python-Files-to-Workspace.png)
-
----
-
-### ⚙️ Step 2: Create a Databricks Job
-
-1. Navigate to the **Workflows** section in Databricks and click **Create Job**.  
-2. Create a new task and configure it as follows:
-
-- **Task name:** A descriptive name like `Daily_Retail_ETL`.  
-- **Type:** Select `Python script`.  
-- **Source:** Workspace.  
-- **Path:** Use the browser to select the `main.py` file you uploaded.  
-- **Compute:** Use **Serverless** for automatic compute management or configure a specific Job Cluster.  
-- **Dependent Libraries:** Click **+ Add** and add the following packages from PyPI:
-  - `pandas`
-  - `requests`
-  - `databricks-sql-connector`
-
-![Databricks Job Task Configuration](/Images/Databricks-Job-Task-Configuration.png)
+- **A Databricks Workspace:** Access to a Databricks workspace on any cloud provider.
+- **Databricks CLI:** The Databricks CLI installed and configured on your local machine.
+- **OpenWeatherMap API Key:** A valid API key from [OpenWeatherMap](https://openweathermap.org/api).
+- **Cluster Permissions:** Permissions to create or manage a cluster and install libraries.
 
 ---
 
-### ▶️ Step 3: Run the Job
+## 5. Setup and Configuration Guide
 
-Click the **Run now** button to execute the pipeline.  
-You can monitor the run's progress in the **Job runs** tab.
+Follow these steps to set up the pipeline in your environment.
 
-![Successful Job Run Monitoring](/Images/Successful-Job-Run-Monitoring.png)
+### Step 1: Clone the Repository
+
+Clone this project's code to your local machine and upload the Python scripts (`1_ingest.py`, `2_enrich.py`, `3_transform_load.py`) to a directory in your Databricks Workspace (e.g., under `/Workspace/Users/your-email/`).
 
 ---
 
-## 🔧 Configuration
+### Step 2: Configure Databricks Secrets
 
-The main settings for the pipeline can be easily modified in the `main.py` file:
+To securely store your API key, you must create a Databricks secret. Run these commands in your local terminal (not a notebook).
 
-```python
-# main.py
+**Create a Secret Scope:**  
+(This scope name must match the one used in `2_enrich.py`)
 
-def main():
-    # ...
-    
-    # --- Configuration ---
-    # Update this path to point to the location of your CSV files.
-    base_data_path = "/Workspace/Users/your_email@domain.com/path/to/data"
-    
-    # Change this to the desired name for your final Delta table.
-    final_table_name = "la_retail_sales_final"
-    
-    # ...
+databricks secrets create-scope --scope "nayabrasool786"
+
+
+**Add Your API Key to the Scope:**  
+(This key name must also match the one used in the script)
+
+databricks secrets put --scope "nayabrasool786" --key "openweathermap-api-key"
+
+
+
+This will open a text editor. Paste your API key, save, and close the editor. Your key is now securely stored.
+
+---
+
+### Step 3: Install Dependent Libraries on Your Cluster
+
+The `2_enrich.py` script requires the `requests` library to call the API.
+
+1. Navigate to **Compute** in your Databricks workspace and select the cluster you intend to use for the job.
+2. Click the **Libraries** tab.
+3. Click **Install New**.
+4. Select **PyPI** as the source and enter `requests` in the Package field.
+5. Click **Install**.
+
+---
+
+## 6. How to Run the Pipeline
+
+This pipeline is designed to be run as a multi-task Databricks Job.
+
+1. Navigate to **Workflows** from the left-hand menu and click the **Jobs** tab.
+2. Click the blue **Create Job** button.
+3. Give the job a descriptive name (e.g., "Hourly Weather ETL Pipeline").
+
+---
+
+### Task 1: Ingest_Data
+
+- **Task name:** Ingest_Data
+- **Type:** Python script
+- **Path:** Browse to and select your `1_ingest.py` script in the workspace.
+- **Cluster:** Select your configured cluster.
+- Click **Create**.
+
+---
+
+### Task 2: Enrich_Data
+
+- Click the **+** icon below the Ingest_Data task.
+- **Task name:** Enrich_Data
+- **Type:** Python script
+- **Path:** Browse to and select your `2_enrich.py` script.
+- **Depends on:** Select *Ingest_Data* from the dropdown. This ensures this task only runs after the first one succeeds.
+- **Cluster:** Select the same cluster.
+- Click **Create**.
+
+---
+
+### Task 3: Transform_and_Load
+
+- Click the **+** icon below the Enrich_Data task.
+- **Task name:** Transform_and_Load
+- **Type:** Python script
+- **Path:** Browse to and select your `3_transform_load.py` script.
+- **Depends on:** Select *Enrich_Data*.
+- **Cluster:** Select the same cluster.
+- Click **Create**.
+
+---
+
+Your job is now fully configured! You can run it manually by clicking **Run now** or set a schedule (e.g., hourly) for automated execution.
+
+---
+
+## 7. Future Improvements
+
+- **Parameterization:** Convert hardcoded table names and paths into job parameters for greater flexibility.
+- **Error Handling & Notifications:** Implement try/except blocks and configure job notifications for failures (e.g., via email or Slack).
+- **Data Quality Checks:** Integrate a data quality tool like Great Expectations to run checks after each stage.
+- **CI/CD:** Set up a CI/CD pipeline using GitHub Actions or Azure DevOps to automate the deployment of code changes to the Databricks workspace.
+
+---
+
+## 🔗 Connect with Me
+👋 Hi, I'm **NAYAB RASOOL SHAIK**
+
+[![🔗LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/nayabrasool-shaik)  
+[![Email](https://img.shields.io/badge/Email-Send%20Mail-blue?logo=gmail)](mailto:nayabshaik046@example.com)  
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-blueviolet?logo=google-chrome)](http://nayabrasool.my.canva.site/)
+
+> _“Learn deeply, build practically, explain simply, and share widely.” – Shaik Nayab Rasool_
