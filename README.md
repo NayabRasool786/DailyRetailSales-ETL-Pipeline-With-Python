@@ -62,6 +62,8 @@ Follow these steps to set up the pipeline in your environment.
 
 ### Step 1: Clone the Repository
 
+![Upload-Python-Files-to-Workspace](Images/Upload-Python-Files-to-Workspace.png)
+
 Clone this project's code to your local machine and upload the Python scripts (`1_ingest.py`, `2_enrich.py`, `3_transform_load.py`) to a directory in your Databricks Workspace (e.g., under `/Workspace/Users/your-email/`).
 
 ---
@@ -90,6 +92,7 @@ This will open a text editor. Paste your API key, save, and close the editor. Yo
 
 ### Step 3: Install Dependent Libraries on Your Cluster
 
+
 The `2_enrich.py` script requires the `requests` library to call the API.
 
 1. Navigate to **Compute** in your Databricks workspace and select the cluster you intend to use for the job.
@@ -98,9 +101,12 @@ The `2_enrich.py` script requires the `requests` library to call the API.
 4. Select **PyPI** as the source and enter `requests` in the Package field.
 5. Click **Install**.
 
+
 ---
 
 ## 6. How to Run the Pipeline
+\
+![Databricks-Job-Task-Configuration](Images/Databricks-Job-Task-Configuration.png)
 
 This pipeline is designed to be run as a multi-task Databricks Job.
 
@@ -141,6 +147,8 @@ This pipeline is designed to be run as a multi-task Databricks Job.
 - **Depends on:** Select *Enrich_Data*.
 - **Cluster:** Select the same cluster.
 - Click **Create**.
+
+![Successful-Job-Run-Monitoring](Images/Successful-Job-Run-Monitoring.png)
 
 ---
 
