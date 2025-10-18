@@ -11,7 +11,7 @@ This project implements an end-to-end ETL (Extract, Transform, Load) pipeline bu
 
 The pipeline follows the Medallion Architecture (Bronze, Silver, Gold layers) to ensure data quality, traceability, and modularity. Orchestration is handled using Databricks Jobs to create a robust, visual, and dependent workflow.
 
-![Project-Architecture](Images/Project-Architecture.png)
+![Project-Architecture-Image](Images/Project-Architecture-Image.png)
 
 ---
 
