@@ -1,7 +1,6 @@
 # Databricks ETL Pipeline: Weather Data Enrichment
 
-**Author:** Nayab Rasool Shaik
-
+**Author:** Nayab Rasool Shaik 
 **Last Updated:** October 11, 2025
 
 ---
